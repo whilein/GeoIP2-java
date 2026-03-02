@@ -3,9 +3,8 @@ package com.maxmind.geoip2.model;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonValue;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
+import com.maxmind.geoip2.ToStringSerializer;
+import tools.jackson.databind.annotation.JsonDeserialize;
 import com.maxmind.db.MaxMindDbCreator;
 import com.maxmind.db.MaxMindDbIpAddress;
 import com.maxmind.db.MaxMindDbNetwork;
@@ -13,6 +12,8 @@ import com.maxmind.db.MaxMindDbParameter;
 import com.maxmind.db.Network;
 import com.maxmind.geoip2.JsonSerializable;
 import com.maxmind.geoip2.NetworkDeserializer;
+import tools.jackson.databind.annotation.JsonSerialize;
+
 import java.net.InetAddress;
 
 /**

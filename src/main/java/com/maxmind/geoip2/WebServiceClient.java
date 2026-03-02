@@ -1,13 +1,15 @@
 package com.maxmind.geoip2;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.InjectableValues;
-import com.fasterxml.jackson.databind.MapperFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
-import com.fasterxml.jackson.databind.json.JsonMapper;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import tools.jackson.core.JacksonException;
+import tools.jackson.core.exc.StreamReadException;
+import tools.jackson.core.type.TypeReference;
+import tools.jackson.databind.DeserializationFeature;
+import tools.jackson.databind.InjectableValues;
+import tools.jackson.databind.MapperFeature;
+import tools.jackson.databind.ObjectMapper;
+import tools.jackson.databind.SerializationFeature;
+import tools.jackson.databind.cfg.DateTimeFeature;
+import tools.jackson.databind.json.JsonMapper;
 import com.maxmind.geoip2.exception.AddressNotFoundException;
 import com.maxmind.geoip2.exception.AuthenticationException;
 import com.maxmind.geoip2.exception.GeoIp2Exception;
@@ -135,8 +137,8 @@ public class WebServiceClient implements WebServiceProvider {
         mapper = JsonMapper.builder()
             .disable(MapperFeature.CAN_OVERRIDE_ACCESS_MODIFIERS)
             .disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
-            .disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS)
-            .addModule(new JavaTimeModule())
+            .disable(DateTimeFeature.WRITE_DATES_AS_TIMESTAMPS)
+            .disable(DeserializationFeature.FAIL_ON_NULL_FOR_PRIMITIVES)
             .build();
 
         requestTimeout = builder.requestTimeout;
@@ -405,7 +407,7 @@ public class WebServiceClient implements WebServiceProvider {
 
         try {
             return mapper.readerFor(cls).with(inject).readValue(response.body());
-        } catch (IOException e) {
+        } catch (JacksonException e) {
             throw new GeoIp2Exception(
                 "Received a 200 response but could not decode it as JSON", e);
         }
@@ -429,7 +431,7 @@ public class WebServiceClient implements WebServiceProvider {
             handleErrorWithJsonBody(content, body, status, uri);
         } catch (HttpException e) {
             throw e;
-        } catch (IOException e) {
+        } catch (JacksonException e) {
             throw new HttpException("Received a " + status + " error for "
                 + uri + " but it did not include the expected JSON body: "
                 + body, status, uri);

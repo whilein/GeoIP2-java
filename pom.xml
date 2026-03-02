@@ -56,24 +56,14 @@
             <version>4.0.2</version>
         </dependency>
         <dependency>
-            <groupId>com.fasterxml.jackson.core</groupId>
+            <groupId>tools.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
-            <version>2.21.0</version>
+            <version>3.0.4</version>
         </dependency>
         <dependency>
-            <groupId>com.fasterxml.jackson.datatype</groupId>
-            <artifactId>jackson-datatype-jsr310</artifactId>
-            <version>2.21.0</version>
-        </dependency>
-        <dependency>
-            <groupId>com.fasterxml.jackson.core</groupId>
+            <groupId>tools.jackson.core</groupId>
             <artifactId>jackson-core</artifactId>
-            <version>2.21.0</version>
-        </dependency>
-        <dependency>
-            <groupId>com.fasterxml.jackson.core</groupId>
-            <artifactId>jackson-annotations</artifactId>
-            <version>2.21</version>
+            <version>3.0.4</version>
         </dependency>
         <dependency>
             <groupId>org.wiremock</groupId>
@@ -82,9 +72,9 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>com.fasterxml.jackson.jr</groupId>
+            <groupId>tools.jackson.jr</groupId>
             <artifactId>jackson-jr-objects</artifactId>
-            <version>2.21.0</version>
+            <version>3.0.4</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -155,7 +145,7 @@
                             https://maxmind.github.io/MaxMind-DB-Reader-java/doc/latest/
                         </link>
                     </links>
-                    <source>17</source>
+                    <source>21</source>
                     <doclint>-missing</doclint> 
                 </configuration>
                 <executions>
@@ -205,7 +195,7 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.15.0</version>
                 <configuration>
-                    <release>17</release>
+                    <release>21</release>
                 </configuration>
             </plugin>
             <plugin>

@@ -1,11 +1,13 @@
 package com.maxmind.geoip2;
 
-import com.fasterxml.jackson.core.JsonFactory;
-import com.fasterxml.jackson.core.JsonParser;
 import com.maxmind.db.Network;
 import org.junit.jupiter.api.Test;
+import tools.jackson.core.JsonParser;
+import tools.jackson.core.exc.StreamReadException;
+import tools.jackson.core.json.JsonFactory;
 
 import java.io.IOException;
+import java.io.UncheckedIOException;
 import java.net.InetAddress;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -41,7 +43,7 @@ final class NetworkDeserializerTest {
 
     @Test
     void rejectsWhitespaceInCidr() {
-        assertThrows(IOException.class, () -> parse("\"  10.0.0.0/8  \""));
+        assertThrows(StreamReadException.class, () -> parse("\"  10.0.0.0/8  \""));
     }
 
 
@@ -83,7 +85,7 @@ final class NetworkDeserializerTest {
 
     @Test
     void wrapsUnknownHostInIOException() {
-        IOException ex = assertThrows(IOException.class, () -> parse("\"999.999.999.999/24\""));
+        StreamReadException ex = assertThrows(StreamReadException.class, () -> parse("\"999.999.999.999/24\""));
         assertNotNull(ex.getCause());
     }
 }

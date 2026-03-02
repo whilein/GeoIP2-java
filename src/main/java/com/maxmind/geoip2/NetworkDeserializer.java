@@ -1,10 +1,12 @@
 package com.maxmind.geoip2;
 
-import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.databind.DeserializationContext;
-import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
+import tools.jackson.core.JsonParser;
+import tools.jackson.core.exc.StreamReadException;
+import tools.jackson.databind.DeserializationContext;
+import tools.jackson.databind.deser.std.StdDeserializer;
 import com.maxmind.db.Network;
 import java.io.IOException;
+import java.io.UncheckedIOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 
@@ -14,33 +16,23 @@ import java.net.UnknownHostException;
 public final class NetworkDeserializer extends StdDeserializer<Network> {
 
     /**
-     * Constructs a {@code NetworkDeserializer} with no type specified.
+     * Constructs a @{code NetworkDeserializer} object.
      */
     public NetworkDeserializer() {
-        this(null);
-    }
-
-    /**
-     * Constructs a @{code NetworkDeserializer} object.
-     *
-     * @param vc a class
-     */
-    public NetworkDeserializer(Class<?> vc) {
-        super(vc);
+        super(Network.class);
     }
 
     @Override
-    public Network deserialize(JsonParser jsonparser, DeserializationContext context)
-            throws IOException {
+    public Network deserialize(JsonParser jsonparser, DeserializationContext context) {
 
         final var cidr = jsonparser.getValueAsString();
         if (cidr == null || cidr.isBlank()) {
             return null;
         }
-        return parseCidr(cidr);
+        return parseCidr(jsonparser, cidr);
     }
 
-    private static Network parseCidr(String cidr) throws IOException {
+    private static Network parseCidr(JsonParser p, String cidr) {
         final var parts = cidr.split("/", 2);
         if (parts.length != 2) {
             throw new IllegalArgumentException("Invalid CIDR format: " + cidr);
@@ -53,7 +45,7 @@ public final class NetworkDeserializer extends StdDeserializer<Network> {
         try {
             address = InetAddress.getByName(addrPart);
         } catch (UnknownHostException e) {
-            throw new IOException("Unknown host in CIDR: " + cidr, e);
+            throw new StreamReadException(p, "Unknown host in CIDR: " + cidr, e);
         }
 
         final var prefixLength = parsePrefixLength(prefixPart, cidr);
